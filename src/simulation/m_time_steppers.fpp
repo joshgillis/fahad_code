@@ -799,6 +799,8 @@ contains
 
         forces_computed = .false.
 
+        call s_compute_ib_forces(q_prim_vf, fluid_pp)
+
         $:GPU_PARALLEL_LOOP(private='[i, gbl_id]', copyin='[s]')
         do i = 1, num_ibs
             if (s == 1) then
@@ -813,7 +815,7 @@ contains
             ! Compute forces BEFORE the RK velocity blend so the device copy of patch_ib%vel matches the host (pre-blend) when
             ! velocity-dependent collision damping forces are evaluated on the GPU.
             if (patch_ib(i)%moving_ibm == 2 .and. .not. forces_computed) then
-                call s_compute_ib_forces(q_prim_vf, fluid_pp)
+                ! call s_compute_ib_forces(q_prim_vf, fluid_pp)
                 forces_computed = .true.
             end if
 
